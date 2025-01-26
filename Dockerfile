@@ -1,11 +1,14 @@
-FROM node:latest AS builder
-WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm install
-COPY . .
-RUN npm run build
+# frontend/Dockerfile
+FROM node:18-alpine
 
-FROM busybox:1.30 AS runner
 WORKDIR /app
-COPY --from=builder /app/dist .
-CMD ["busybox", "httpd", "-f", "-v", "-p", "80"]
+
+COPY package.json package-lock.json ./
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 5173
+
+CMD ["npm", "run", "dev"]
